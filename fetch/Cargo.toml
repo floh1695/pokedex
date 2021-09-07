@@ -7,4 +7,13 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-pokerust = "0.2.0"
+mongodb = "1.2.3"
+
+[dependencies.pokerust]
+git = "https://github.com/floh1695/pokerust"
+version = "0.2.0"
+rev = "65401b63d7ff78b0b86807c92aaefb47c3e19f31"
+
+[dependencies.tokio]
+version = "0.2.18"
+features = ["full"]
