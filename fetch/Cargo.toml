@@ -9,11 +9,13 @@ edition = "2018"
 [dependencies]
 futures = "0.3.17"
 mongodb = "1.2.3"
+ron = "0.6.4"
+serde = "1.0.130"
 
 [dependencies.pokerust]
 git = "https://github.com/floh1695/pokerust"
 version = "0.2.0"
-rev = "65401b63d7ff78b0b86807c92aaefb47c3e19f31"
+rev = "2f59bac9ff37417753f499a5470bfc026b798928"
 
 [dependencies.tokio]
 version = "0.2.18"

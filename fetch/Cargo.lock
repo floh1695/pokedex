@@ -271,6 +271,8 @@ dependencies = [
  "futures",
  "mongodb",
  "pokerust",
+ "ron",
+ "serde",
  "tokio",
 ]
 
@@ -1003,7 +1005,7 @@ checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 [[package]]
 name = "pokerust"
 version = "0.2.0"
-source = "git+https://github.com/floh1695/pokerust?rev=65401b63d7ff78b0b86807c92aaefb47c3e19f31#65401b63d7ff78b0b86807c92aaefb47c3e19f31"
+source = "git+https://github.com/floh1695/pokerust?rev=2f59bac9ff37417753f499a5470bfc026b798928#2f59bac9ff37417753f499a5470bfc026b798928"
 dependencies = [
  "cached",
  "lazy_static",
@@ -1194,6 +1196,17 @@ dependencies = [
  "untrusted",
  "web-sys",
  "winapi 0.3.9",
+]
+
+[[package]]
+name = "ron"
+version = "0.6.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "064ea8613fb712a19faf920022ec8ddf134984f100090764a4e1d768f3827f1f"
+dependencies = [
+ "base64 0.13.0",
+ "bitflags",
+ "serde",
 ]
 
 [[package]]
