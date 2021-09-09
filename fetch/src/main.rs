@@ -23,7 +23,10 @@ use pokerust::{
     Pokemon,
 };
 use std::{
-    env::current_dir,
+    env::{
+        args,
+        current_dir,
+    },
     error::Error,
     time::SystemTime,
 };
@@ -31,6 +34,11 @@ use tokio;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    let arguments: Vec<String> = args().collect();
+    let program = arguments
+        .get(1)
+        .ok_or("Please input a program: 'fetch' or 'index'")?;
+
     let app_root = current_dir()?;
     let config_path = app_root.join("config/config.ron");
     let config = Config::from_file_path(config_path)?;
@@ -39,20 +47,28 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let pokemon_collection = database.collection("pokemon");
 
     let before = SystemTime::now();
-    add_all_pokemon_to_collection(pokemon_collection.clone()).await?;
-    println!("Seconds to add all pokemon to collection: {}", before.elapsed()?.as_secs());
+    match &program[..] {
+        "fetch" => {
+            add_all_pokemon_to_collection(pokemon_collection.clone()).await?;
+        },
+        "index" => {
+            let filter = doc! { "id": 25 };
+            let find_options = FindOptions::builder()
+                .sort(doc! { "name": 1 })
+                .build();
 
-    let filter = doc! { "id": 25 };
-    let find_options = FindOptions::builder()
-        .sort(doc! { "name": 1 })
-        .build();
+            let cursor = pokemon_collection.clone().find(filter, find_options).await?;
+            let results: Vec<Document> = cursor.try_collect().await?;
 
-    let cursor = pokemon_collection.clone().find(filter, find_options).await?;
-    let results: Vec<Document> = cursor.try_collect().await.unwrap();
-
-    for result in results.iter() {
-        println!("{}", *result);
+            for result in results.iter() {
+                println!("{}", *result);
+            }
+        },
+        _ => {
+            return Err(format!("'{}' is not a valid program name", program).into());
+        },
     }
+    println!("Seconds to run program {}: {}", program, before.elapsed()?.as_secs());
 
     Ok(())
 }
@@ -63,7 +79,8 @@ async fn add_all_pokemon_to_collection(collection: Collection) -> Result<(), Box
     let all_ids = get_pokemon_ids();
     let all_jobs = all_ids.iter()
         .map(|&id| Pokemon::from_id(id).map_err(|e| format!("Error processing {}\n{}", id, e)));
-    let all_pokemon = all_jobs.into_iter().collect::<Result<Vec<Pokemon>, String>>()?;
+    let all_pokemon = all_jobs.into_iter()
+        .collect::<Result<Vec<Pokemon>, String>>()?;
     let all_documents = all_pokemon.iter()
         .map(|pokemon| pokemon.clone().to_document());
 
