@@ -68,7 +68,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
             return Err(format!("'{}' is not a valid program name", program).into());
         },
     }
-    println!("Seconds to run program {}: {}", program, before.elapsed()?.as_secs());
+    let elapsed = before.elapsed()?;
+    let elapsed_seconds = elapsed.as_micros() as f64 / 1000000.0;
+    println!("Seconds to run program {}: {}", program, elapsed_seconds);
 
     Ok(())
 }
